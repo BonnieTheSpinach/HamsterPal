@@ -98,7 +98,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         chat.onClose = { [unowned self] in self.hideChat() }
         state.photo = cfg.skin != "drawn"
-        state.jacket = cfg.jacket
+        state.outfit = cfg.outfit
         setHome(Home(rawValue: cfg.home) ?? .dock, save: false)
         timer = Timer(timeInterval: 1.0 / 30, repeats: true) { [unowned self] _ in self.tick() }
         RunLoop.main.add(timer!, forMode: .common)
@@ -282,14 +282,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             NSApp.dockTile.display()
         }
         if state.photo {
-            let jacket = ClosureMenuItem(title: "Navy jacket") { [unowned self] in
-                self.state.jacket.toggle()
-                self.cfg.jacket = self.state.jacket
-                ConfigStore.save(self.cfg)
-                NSApp.dockTile.display()
+            let outfit = NSMenuItem(title: "Outfit", action: nil, keyEquivalent: "")
+            let looks = NSMenu()
+            for (label, value) in [("None", "none"), ("Navy jacket", "jacket"), ("Whimsical", "whimsical")] {
+                let item = ClosureMenuItem(title: label) { [unowned self] in
+                    self.state.outfit = value
+                    self.cfg.outfit = value
+                    ConfigStore.save(self.cfg)
+                    NSApp.dockTile.display()
+                }
+                item.state = state.outfit == value ? .on : .off
+                looks.addItem(item)
             }
-            jacket.state = state.jacket ? .on : .off
-            m.addItem(jacket)
+            outfit.submenu = looks
+            m.addItem(outfit)
         }
         let talk = NSMenuItem(title: "Chattiness", action: nil, keyEquivalent: "")
         let sub = NSMenu()

@@ -10,7 +10,7 @@ final class PetState: ObservableObject {
     @Published var happy = false
     @Published var bubble: String?
     @Published var photo = true   // photo Ham (cut out of Bonnie's picture) vs the drawn one
-    @Published var jacket = false // photo Ham in the navy jacket
+    @Published var outfit = "none" // photo Ham's outfit: "none", "jacket" or "whimsical"
 }
 
 extension Color {
@@ -244,7 +244,10 @@ struct PhotoHamster: View {
     var height: CGFloat
     var speed: Double = 1
     static let image: NSImage? = Bundle.main.url(forResource: "ham", withExtension: "png").flatMap { NSImage(contentsOf: $0) }
-    static let jacketImage: NSImage? = Bundle.main.url(forResource: "ham_jacket", withExtension: "png").flatMap { NSImage(contentsOf: $0) }
+    /// outfit name → bundled picture (ham_<name>.png)
+    static let outfits: [String: NSImage] = ["jacket", "whimsical"].reduce(into: [:]) { d, name in
+        if let url = Bundle.main.url(forResource: "ham_\(name)", withExtension: "png"), let img = NSImage(contentsOf: url) { d[name] = img }
+    }
 
     var body: some View {
         let moving = [.walking, .chasing, .running].contains(s.mode)
@@ -260,9 +263,9 @@ struct PhotoHamster: View {
         case .walking, .chasing, .running: lean = (s.facingRight ? 5 : -5) + sin(t * 4) * 2
         default: lean = 0
         }
-        return Image(nsImage: (s.jacket ? Self.jacketImage : nil) ?? Self.image!)
+        return Image(nsImage: Self.outfits[s.outfit] ?? Self.image!)
             .resizable().interpolation(.high).aspectRatio(contentMode: .fit)
-            .frame(height: height)
+            .frame(height: height * (s.outfit == "whimsical" ? 1.2 : 1))   // hat + wand take up room
             .scaleEffect(x: 1 + (1 - squash) * 0.6, y: squash * (1 + breathe), anchor: .bottom)
             .rotationEffect(.degrees(lean), anchor: s.mode == .dragged ? .top : .bottom)
             .saturation(s.mode == .sleeping ? 0.75 : 1)
