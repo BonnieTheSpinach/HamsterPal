@@ -10,6 +10,7 @@ final class PetState: ObservableObject {
     @Published var happy = false
     @Published var bubble: String?
     @Published var photo = true   // photo Ham (cut out of Bonnie's picture) vs the drawn one
+    @Published var jacket = false // photo Ham in the navy jacket
 }
 
 extension Color {
@@ -243,6 +244,7 @@ struct PhotoHamster: View {
     var height: CGFloat
     var speed: Double = 1
     static let image: NSImage? = Bundle.main.url(forResource: "ham", withExtension: "png").flatMap { NSImage(contentsOf: $0) }
+    static let jacketImage: NSImage? = Bundle.main.url(forResource: "ham_jacket", withExtension: "png").flatMap { NSImage(contentsOf: $0) }
 
     var body: some View {
         let moving = [.walking, .chasing, .running].contains(s.mode)
@@ -258,7 +260,7 @@ struct PhotoHamster: View {
         case .walking, .chasing, .running: lean = (s.facingRight ? 5 : -5) + sin(t * 4) * 2
         default: lean = 0
         }
-        return Image(nsImage: Self.image!)
+        return Image(nsImage: (s.jacket ? Self.jacketImage : nil) ?? Self.image!)
             .resizable().interpolation(.high).aspectRatio(contentMode: .fit)
             .frame(height: height)
             .scaleEffect(x: 1 + (1 - squash) * 0.6, y: squash * (1 + breathe), anchor: .bottom)

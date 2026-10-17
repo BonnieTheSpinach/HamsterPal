@@ -98,6 +98,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         chat.onClose = { [unowned self] in self.hideChat() }
         state.photo = cfg.skin != "drawn"
+        state.jacket = cfg.jacket
         setHome(Home(rawValue: cfg.home) ?? .dock, save: false)
         timer = Timer(timeInterval: 1.0 / 30, repeats: true) { [unowned self] _ in self.tick() }
         RunLoop.main.add(timer!, forMode: .common)
@@ -162,7 +163,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         } else {
             NSApp.dockTile.contentView = nil
             dockHost = nil
-            NSApp.setActivationPolicy(.accessory)
+            // stays a regular Dock app so right-clicking the Dock icon still shows Ham's menu
+            NSApp.setActivationPolicy(.regular)
             let s = screenFrame
             let x = min(max(NSEvent.mouseLocation.x - petSize.width / 2, s.minX), s.maxX - petSize.width)
             petPanel.setFrameOrigin(NSPoint(x: x, y: s.minY))
@@ -278,6 +280,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             self.cfg.skin = self.state.photo ? "photo" : "drawn"
             ConfigStore.save(self.cfg)
             NSApp.dockTile.display()
+        }
+        if state.photo {
+            let jacket = ClosureMenuItem(title: "Navy jacket") { [unowned self] in
+                self.state.jacket.toggle()
+                self.cfg.jacket = self.state.jacket
+                ConfigStore.save(self.cfg)
+                NSApp.dockTile.display()
+            }
+            jacket.state = state.jacket ? .on : .off
+            m.addItem(jacket)
         }
         let talk = NSMenuItem(title: "Chattiness", action: nil, keyEquivalent: "")
         let sub = NSMenu()

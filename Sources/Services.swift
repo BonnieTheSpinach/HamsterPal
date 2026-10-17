@@ -8,6 +8,7 @@ struct HamConfig: Codable {
     var model = "sonnet"       // any `claude --model` alias: haiku / sonnet / opus
     var claudePath = ""        // auto-detected when empty
     var skin = "photo"         // "photo" or "drawn"
+    var jacket = false         // photo Ham wears the navy jacket
     var chattiness = "quiet"   // "quiet" (just says hi), "normal" or "chatty"
     var dockIconX: Double?     // remembered from clicks on the Dock icon, for speech bubbles
     var dockIconY: Double?
@@ -21,6 +22,7 @@ struct HamConfig: Codable {
         model = try c.decodeIfPresent(String.self, forKey: .model) ?? "sonnet"
         claudePath = try c.decodeIfPresent(String.self, forKey: .claudePath) ?? ""
         skin = try c.decodeIfPresent(String.self, forKey: .skin) ?? "photo"
+        jacket = try c.decodeIfPresent(Bool.self, forKey: .jacket) ?? false
         chattiness = try c.decodeIfPresent(String.self, forKey: .chattiness) ?? "quiet"
         dockIconX = try c.decodeIfPresent(Double.self, forKey: .dockIconX)
         dockIconY = try c.decodeIfPresent(Double.self, forKey: .dockIconY)

@@ -6,7 +6,7 @@ APP=HamsterPal.app
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp Info.plist "$APP/Contents/Info.plist"
-cp Assets/ham.png "$APP/Contents/Resources/ham.png"
+cp Assets/ham.png Assets/ham_jacket.png "$APP/Contents/Resources/"
 swiftc -O -suppress-warnings -swift-version 5 -parse-as-library \
   -framework AppKit -framework SwiftUI \
   Sources/*.swift -o "$APP/Contents/MacOS/HamsterPal"

@@ -3,7 +3,7 @@
 A tiny hamster that lives on a Mac, in the Dock or walking along the bottom of the screen. Click him and you can chat with Claude through him.
 
 - **Chat:** answers come from the local `claude` CLI (Claude Code), so there's no API key to set up. He texts like a close friend: "hi ham" gets "hi rat 🐭".
-- **Dock or desktop:** in the Dock he's an animated icon with a hamster wheel. On the desktop you can drag him around. He's a photo cut out with Apple's Vision subject lifting (`tools/cutout.swift`), or a drawn hamster if you prefer.
+- **Dock or desktop:** in the Dock he's an animated icon with a hamster wheel. On the desktop you can drag him around. He's a photo cut out with Apple's Vision subject lifting (`tools/cutout.swift`), with an optional navy jacket (right-click → Navy jacket), or a drawn hamster if you prefer.
 - **Letters to the real hamster:** a hidden link in the chat lets you send an iMessage to one person, either as a plain text or as a picture of a handwritten letter (lined paper on a wooden desk, drawn with Core Graphics in Bradley Hand and HanziPen SC). Nothing is sent until you preview it and press Send, and every letter is logged locally.
 
 ## Build
